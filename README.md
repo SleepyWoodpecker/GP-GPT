@@ -4,7 +4,9 @@ Data was obtained and cleaned from [<a href="https://grail.moe">this website</a>
 
 All rights to the data go to its respective owners.
 
-<b>As of now, here is what I have been able to do:<b>
+<b>As of now, here is what I have been able to do:</b>
+
 Train loss: 2.14222 | Val loss: 2.21192
-" wedomey jused iin shat this as arto's arobelighlymins con dent athe al flay tegie aporetry intenly inits showialdue todored the wehicse cts ass,, thly the ouestiomatuis angesengle has tant torentif t"
+
+GP-GPT: " wedomey jused iin shat this as arto's arobelighlymins con dent athe al flay tegie aporetry intenly inits showialdue todored the wehicse cts ass,, thly the ouestiomatuis angesengle has tant torentif t"
 No wiser words have been said tbh.
