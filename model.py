@@ -16,7 +16,7 @@ BATCH_SIZE = 4
 VOCAB_SIZE = len(character_set)
 HIDDEN_LAYER = 256
 lr = 1e-3
-training_rounds = 100000
+training_rounds = 5000
 # -----------------------------
 
 
@@ -51,6 +51,7 @@ def get_batch(data_set):
 # give the model a way to evaluate its loss
 @torch.no_grad
 def get_loss(model, loss_evals):
+    """Evaluate the mean loss for both training and validation batches"""
     losses_tr, losses_val = [], []
     for _ in range(loss_evals):
         Xtr, Ytr = get_batch(train)
@@ -118,6 +119,20 @@ class MultiHeadedAttention(nn.Module):
         return out
 
 
+class FeedForward(nn.Module):
+    """This block gives tokens the time to think"""
+
+    def __init__(self, in_features, out_features):
+        super().__init__()
+        self.ff = nn.Sequential(
+            nn.Linear(in_features=in_features, out_features=out_features), nn.ReLU()
+        )
+
+    def forward(self, x):
+        out = self.ff(x)
+        return out
+
+
 # creation of the model
 class Model(nn.Module):
     def __init__(self):
@@ -129,8 +144,9 @@ class Model(nn.Module):
         self.position_embedding_table = nn.Embedding(
             num_embeddings=CONTEXT_LENGTH, embedding_dim=HIDDEN_LAYER
         )
-        self.multi_head = MultiHeadedAttention(4, int(32 / 4))
-        self.lm_head = nn.Linear(in_features=32, out_features=VOCAB_SIZE)
+        self.multi_head = MultiHeadedAttention(4, HIDDEN_LAYER // 4)
+        self.ff_block = FeedForward(in_features=HIDDEN_LAYER, out_features=HIDDEN_LAYER)
+        self.lm_head = nn.Linear(in_features=HIDDEN_LAYER, out_features=VOCAB_SIZE)
 
     def forward(self, x, targets=None):
         """Do a forward pass of the NN. Returns loss if targets are given"""
