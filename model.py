@@ -16,7 +16,7 @@ BATCH_SIZE = 4
 VOCAB_SIZE = len(character_set)
 HIDDEN_LAYER = 32
 lr = 1e-3
-training_rounds = 5000
+training_rounds = 10000
 # -----------------------------
 
 
@@ -164,8 +164,6 @@ class Model(nn.Module):
             Block(hidden_layer_size=HIDDEN_LAYER, no_of_heads=4),
             Block(hidden_layer_size=HIDDEN_LAYER, no_of_heads=4),
         )
-        # self.multi_head = MultiHeadedAttention(4, HIDDEN_LAYER // 4)
-        # self.ffwd = FeedForward(HIDDEN_LAYER, HIDDEN_LAYER)
         self.lm_head = nn.Linear(in_features=HIDDEN_LAYER, out_features=VOCAB_SIZE)
 
     def forward(self, x, targets=None):
@@ -176,8 +174,6 @@ class Model(nn.Module):
         token_logits: Tensor = self.token_embedding_table(x)
         postition_logits: Tensor = self.position_embedding_table(torch.arange(T))
         input_tokens = token_logits + postition_logits
-        # weighted_tokens = self.multi_head(input_tokens)
-        # feed_forward = self.ffwd(weighted_tokens)
         feed_forward = self.blocks(input_tokens)
         logits: Tensor = self.lm_head(feed_forward)
 
