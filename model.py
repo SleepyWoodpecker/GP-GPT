@@ -14,7 +14,7 @@ itos = {i: s for i, s in enumerate(character_set)}
 CONTEXT_LENGTH = 8
 BATCH_SIZE = 4
 VOCAB_SIZE = len(character_set)
-HIDDEN_LAYER = 256
+HIDDEN_LAYER = 32
 lr = 1e-3
 training_rounds = 5000
 # -----------------------------
@@ -133,6 +133,21 @@ class FeedForward(nn.Module):
         return out
 
 
+class Block(nn.Module):
+    """Enables communication (multi-headed self-attention), then computation (feed-forward)"""
+
+    def __init__(self, hidden_layer_size, no_of_heads):
+        super().__init__()
+        multi_attn_head_size = hidden_layer_size // no_of_heads
+        self.multi_attn = MultiHeadedAttention(no_of_heads, multi_attn_head_size)
+        self.ffwd = FeedForward(hidden_layer_size, hidden_layer_size)
+
+    def forward(self, x):
+        x = self.multi_attn(x)
+        x = self.ffwd(x)
+        return x
+
+
 # creation of the model
 class Model(nn.Module):
     def __init__(self):
@@ -144,8 +159,13 @@ class Model(nn.Module):
         self.position_embedding_table = nn.Embedding(
             num_embeddings=CONTEXT_LENGTH, embedding_dim=HIDDEN_LAYER
         )
-        self.multi_head = MultiHeadedAttention(4, HIDDEN_LAYER // 4)
-        self.ff_block = FeedForward(in_features=HIDDEN_LAYER, out_features=HIDDEN_LAYER)
+        self.blocks = nn.Sequential(
+            Block(hidden_layer_size=HIDDEN_LAYER, no_of_heads=4),
+            Block(hidden_layer_size=HIDDEN_LAYER, no_of_heads=4),
+            Block(hidden_layer_size=HIDDEN_LAYER, no_of_heads=4),
+        )
+        # self.multi_head = MultiHeadedAttention(4, HIDDEN_LAYER // 4)
+        # self.ffwd = FeedForward(HIDDEN_LAYER, HIDDEN_LAYER)
         self.lm_head = nn.Linear(in_features=HIDDEN_LAYER, out_features=VOCAB_SIZE)
 
     def forward(self, x, targets=None):
@@ -156,8 +176,10 @@ class Model(nn.Module):
         token_logits: Tensor = self.token_embedding_table(x)
         postition_logits: Tensor = self.position_embedding_table(torch.arange(T))
         input_tokens = token_logits + postition_logits
-        weighted_tokens = self.multi_head(input_tokens)
-        logits: Tensor = self.lm_head(weighted_tokens)
+        # weighted_tokens = self.multi_head(input_tokens)
+        # feed_forward = self.ffwd(weighted_tokens)
+        feed_forward = self.blocks(input_tokens)
+        logits: Tensor = self.lm_head(feed_forward)
 
         # if there are targets present, perform a calculation of the loss
         if targets != None:
@@ -201,8 +223,8 @@ if __name__ == "__main__":
         logits, loss = m(Xtr, Ytr)
 
         # print the loss at regular intervals
-        if i % 500 == 0:
-            get_loss(m, 100)
+        if i % 1000 == 0:
+            get_loss(m, 500)
 
         # backward pass
         optimizer.zero_grad(set_to_none=True)
@@ -210,10 +232,10 @@ if __name__ == "__main__":
         optimizer.step()
 
     print("Training completed...")
-    get_loss(m, 100)
+    get_loss(m, 500)
     print(
         decode(
-            m.generate(torch.zeros((1, 1), dtype=torch.long), max_tokens=200)[
+            m.generate(torch.zeros((1, 1), dtype=torch.long), max_tokens=300)[
                 0
             ].tolist()
         )
