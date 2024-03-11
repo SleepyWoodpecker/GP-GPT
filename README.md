@@ -6,7 +6,8 @@ All rights to the data go to its respective owners.
 
 <b>As of now, here is what I have been able to do:</b>
 
-Train loss: 2.14222 | Val loss: 2.21192
+Train loss: 2.03122 | Val loss: 2.09755
 
-GP-GPT: " wedomey jused iin shat this as arto's arobelighlymins con dent athe al flay tegie aporetry intenly inits showialdue todored the wehicse cts ass,, thly the ouestiomatuis angesengle has tant torentif t"
+GP-GPT: " Theow elvionay do apther cheremently cuaity efnextihing of the truat, pofter of or exournotly of poin of cost ohie ofters eenkot (ofwhore prow if sourn core for beofthad at iethar world to as aeteps aakervidour — to remienke a for keffeolamm that ampon to fethat For effiltuse sostoned prowasiens far"
+
 No wiser words have been said tbh.

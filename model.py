@@ -110,12 +110,17 @@ class MultiHeadedAttention(nn.Module):
         self.multi_headed_attention_block = nn.ModuleList(
             [SelfAttentionHead(head_size) for _ in range(number_of_heads)]
         )
+        self.proj = nn.Linear(
+            in_features=head_size * number_of_heads,
+            out_features=head_size * number_of_heads,
+        )
 
     def forward(self, x):
         # since the multi-attention head requires the splitting of the channels among the heads, this joins back the channels
         out = torch.cat(
             [attn_head(x) for attn_head in self.multi_headed_attention_block], dim=-1
         )
+        out = self.proj(out)
         return out
 
 
@@ -124,8 +129,11 @@ class FeedForward(nn.Module):
 
     def __init__(self, in_features, out_features):
         super().__init__()
+        # the *4 here is just me following Karpathy
         self.ff = nn.Sequential(
-            nn.Linear(in_features=in_features, out_features=out_features), nn.ReLU()
+            nn.Linear(in_features=in_features, out_features=out_features * 4),
+            nn.ReLU(),
+            nn.Linear(in_features=in_features * 4, out_features=out_features),
         )
 
     def forward(self, x):
@@ -143,9 +151,9 @@ class Block(nn.Module):
         self.ffwd = FeedForward(hidden_layer_size, hidden_layer_size)
 
     def forward(self, x):
-        x = self.multi_attn(x)
-        x = self.ffwd(x)
-        return x
+        multi_attention_r = x + self.multi_attn(x)
+        ffwd_r = multi_attention_r + self.ffwd(multi_attention_r)
+        return ffwd_r
 
 
 # creation of the model
