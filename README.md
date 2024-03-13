@@ -17,6 +17,12 @@ Train loss: 0.89576 | Val loss: 1.28290
 
 GP-GPT: " I am highly use thing a good governance in power‐ asks Jatter and Twiter appeatevoted Strives for Other"s one rays. When his assum to our tectional crasts that it makes how a bas/hour acquisitive and internations of certain is defining. This is threats the nature and streate to different get to be a formed. US that found do other is a strenning that tree world today isn't invalided someone that it. If the governments' can hope to do live, but they predict for us their giveable. For indictors to recount current significance technology and so keep the unique toway given this virtue. Show that may become reaching that justifying a bogramous experience difficuls (much still easier to fave and refutal or suppered victimation enably to acques and their gried for corage. Asing it to be fundamental effective of disorstates, but also in either premises. Uthilogy is the recognition that is only achieve what in the fund justifying by hand, failed to regarise ass the Burman, and Singland stay arch"
 
+After increasing the size of training data and further tuning hyperparamters (Training rounds: 7500):
+Train loss: 0.98660 | Val loss: 1.27908
+
+GP-GPT: "result or whether "is Massams staunching. Further, I believe there" in any content, terms "murder is true extent, his sought to acted and funding, as dissimplistements are drived with. It with this indeed the construct' has the building to work. Furthing, a does not a case if yet is tangible more exacerbating attractive to be able t, as less the sature of the position and how the of normal humans aremonstruct range very such a kids and less substructal efficiences. "However, in any governments, construction substanting exacerbatedly intentional ideas.
+In recence has evidently physics our safety conduction raised title‐sense tasks, many circulated in student, due to murdent the corner and movie society as boggler us from the modern-based - result, sting economic process base, and community of tour mindsets, tools for good stages at the large city of the some of these premises for gender equipment, fewtors and such attempt to be most, capability and hegh‐driven gives of then transminal s"
+
 No wiser words have been said tbh.
 
 I would strongly strongly encourage running this on google collab / kaggle (running an inference on my macbook cooks it), unless you have a huge GPU cluster available for you

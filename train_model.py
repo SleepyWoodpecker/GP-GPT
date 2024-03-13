@@ -18,10 +18,10 @@ HIDDEN_LAYER = 384
 NO_OF_HEADS = 6
 NO_OF_BLOCKS = 6
 DROPOUT_RATE = (
-    0.2  # added right before the residual connection back to prevent overfitting
+    0.3  # added right before the residual connection back to prevent overfitting
 )
 lr = 3e-4
-training_rounds = 10000
+training_rounds = 7000
 # -----------------------------
 
 # determine the device to train on (this is mac inclusive too :D)
