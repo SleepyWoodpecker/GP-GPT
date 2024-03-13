@@ -25,8 +25,8 @@ training_rounds = 5000
 # -----------------------------
 
 # determine the device to train on (this is mac inclusive too :D)
-mps = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
-cuda = torch.device("cuda" if torch.backends.mps.is_available() else "cpu")
+mps = "mps" if torch.backends.mps.is_available() else None
+cuda = "cuda" if torch.backends.mps.is_available() else None
 device = mps or cuda or "cpu"
 device = "cpu"
 print("Device is", device, "\n")

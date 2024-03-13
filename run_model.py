@@ -199,7 +199,7 @@ if __name__ == "__main__":
     if not os.path.exists("model.pth"):
         raise Exception("No previous configuration of the saved model exists !")
 
-    m: Model = torch.load("model.pth")
+    m: Model = torch.load("model.pth", map_location=device)
     m.eval()
 
     get_loss(m, 500)

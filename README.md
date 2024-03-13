@@ -6,8 +6,21 @@ All rights to the data go to its respective owners.
 
 <b>As of now, here is what I have been able to do:</b>
 
+After implementation of residual connections:
 Train loss: 2.03122 | Val loss: 2.09755
 
-GP-GPT: " Theow elvionay do apther cheremently cuaity efnextihing of the truat, pofter of or exournotly of poin of cost ohie ofters eenkot (ofwhore prow if sourn core for beofthad at iethar world to as aeteps aakervidour — to remienke a for keffeolamm that ampon to fethat For effiltuse sostoned prowasiens far"
+After implmentation of layernorm, dropout and increasing parameter size:
+Train loss: 0.89576 | Val loss: 1.28290
+
+GP-GPT: " I am highly use thing a good governance in power‐ asks Jatter and Twiter appeatevoted Strives for Other"s one rays. When his assum to our tectional crasts that it makes how a bas/hour acquisitive and internations of certain is defining. This is threats the nature and streate to different get to be a formed. US that found do other is a strenning that tree world today isn't invalided someone that it. If the governments' can hope to do live, but they predict for us their giveable. For indictors to recount current significance technology and so keep the unique toway given this virtue. Show that may become reaching that justifying a bogramous experience difficuls (much still easier to fave and refutal or suppered victimation enably to acques and their gried for corage. Asing it to be fundamental effective of disorstates, but also in either premises. Uthilogy is the recognition that is only achieve what in the fund justifying by hand, failed to regarise ass the Burman, and Singland stay arch"
 
 No wiser words have been said tbh.
+
+I would strongly strongly encourage running this on google collab (running an inference on my macbook cooks it), unless you have a huge GPU cluster available for you
+
+<b>Notable to-dos:</b>
+
+1. Increase the size of the dataset
+2. Improve the tokenizer (perhaps the tokenizer video from the same series)
+3. Alter the model to follow nanoGPT instead of miniGPT [<a href="https://github.com/karpathy/nanoGPT">By Karpathy too!</a>]
+4. Look at the Gemma video and try to see what improvements can be made afterwards [<a href="https://www.youtube.com/watch?v=WW7ZxaC3OtA">From this video</a>]
