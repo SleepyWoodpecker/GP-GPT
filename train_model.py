@@ -20,8 +20,8 @@ NO_OF_BLOCKS = 6
 DROPOUT_RATE = (
     0.2  # added right before the residual connection back to prevent overfitting
 )
-lr = 1e-3
-training_rounds = 5000
+lr = 3e-4
+training_rounds = 10000
 # -----------------------------
 
 # determine the device to train on (this is mac inclusive too :D)
