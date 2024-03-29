@@ -7,7 +7,7 @@ GPT4_SPLIT_PATTERN = r"""'(?i:[sdmt]|ll|ve|re)|[^\r\n\p{L}\p{N}]?+\p{L}+|\p{N}{1
 
 
 class Tokenizer:
-    def __init__(self, text, saved_config_folder=None):
+    def __init__(self, text=None, saved_config_folder=None):
         # load trained tokenizer if there is a config path for the merge and reverse merge provided
         if saved_config_folder and os.path.exists(saved_config_folder):
             with open(f"{saved_config_folder}/merges.pkl", "rb") as file:
@@ -70,7 +70,7 @@ class Tokenizer:
 
         next_token = 256
 
-        while next_token <= vocab_size:
+        while next_token < vocab_size:
             most_frequent_pair_and_count = self._get_ranks(self.encoded_chunks)[0]
 
             # halt training if pairs appear no more than once
@@ -114,7 +114,7 @@ class Tokenizer:
         for target, new_token in self.merges.items():
             input_chunks = self._merge(input_chunks, target, new_token)
 
-        return input_chunks
+        return [token for chunk in input_chunks for token in chunk]
 
     def decode(self, input_tokens):
         if not self.merges or not self.reverse_merges:
@@ -123,25 +123,23 @@ class Tokenizer:
         # unmerge the tokens
         for new_token, original_tokens in self.reverse_merges:
             new_sequence = []
-            for chunk in input_tokens:
-                new_chunk = []
-                for token in chunk:
-                    if token == new_token:
-                        new_chunk.extend(original_tokens)
-                    else:
-                        new_chunk.append(token)
+            for token in input_tokens:
+                if token == new_token:
+                    new_sequence.extend(original_tokens)
+                else:
+                    new_sequence.append(token)
 
-                new_sequence.append(new_chunk)
-                input_tokens = new_sequence
+            input_tokens = new_sequence
 
-        return (b"".join([bytes(i) for i in input_tokens])).decode("utf-8")
+        return "".join([chr(i) for i in input_tokens])
 
 
 if __name__ == "__main__":
-    txt = open("../data/essays2.txt", "r").read()
+    txt = open("../data/essays3.txt", "r").read()
 
-    t = Tokenizer(txt, "trained_config")
-
-    r = t.encode("Economic powerhouse, let them rise. It is time we made a move")
+    t = Tokenizer(txt)
+    t.train(1000, True)
+    print(len(t.merges) + 256)
+    r = t.encode("This was the beginning of summers, the ending of winters !")
     print(r)
     print(t.decode(r))

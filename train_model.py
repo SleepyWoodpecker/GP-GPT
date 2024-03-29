@@ -1,22 +1,21 @@
 import torch, os
 from torch import nn, Tensor
 import torch.nn.functional as F
+from tokenizer.tokenizer import Tokenizer
 
 # Data processing and extraction
-data = open("data/essays.txt", "r").read()
-character_set = sorted(list(set(data)))
+data = open("data/essays.txt", "r", encoding="utf-8").read()
 
-# creating of character level encoding
-stoi = {s: i for i, s in enumerate(character_set)}
-itos = {i: s for i, s in enumerate(character_set)}
+# load the tokenizer from config
+trained_tokenizer = Tokenizer(saved_config_folder="tokenizer/trained_config")
 
 # ----- Global Parameters -----
 CONTEXT_LENGTH = 256
 BATCH_SIZE = 64
-VOCAB_SIZE = len(character_set)
-HIDDEN_LAYER = 384
-NO_OF_HEADS = 6
-NO_OF_BLOCKS = 6
+VOCAB_SIZE = 256 + len(trained_tokenizer.merges)
+HIDDEN_LAYER = 4096
+NO_OF_HEADS = 64
+NO_OF_BLOCKS = 8
 DROPOUT_RATE = (
     0.3  # added right before the residual connection back to prevent overfitting
 )
@@ -26,27 +25,15 @@ training_rounds = 7000
 
 # determine the device to train on (this is mac inclusive too :D)
 mps = "mps" if torch.backends.mps.is_available() else None
-cuda = "cuda" if torch.backends.mps.is_available() else None
+cuda = "cuda" if torch.cuda.is_available() else None
 device = mps or cuda or "cpu"
-device = "cpu"
 print("Device is", device, "\n")
-
-
-# encoding and decoding functions
-def encode(input):
-    """Return the string to integer encoding for the input sequence"""
-    return [stoi[s] for s in input]
-
-
-def decode(input):
-    """Based on the input sequence of integers, return it a string"""
-    return "".join([itos[i] for i in input])
 
 
 # preparing the training and testing splits
 n = int(len(data) * 0.9)
-train = torch.tensor(encode(data[:n]))
-val = torch.tensor(encode(data[n:]))
+train = torch.tensor(trained_tokenizer.encode(data[:n]))
+val = torch.tensor(trained_tokenizer.encode(data[n:]))
 
 
 def get_batch(data_set):
@@ -274,7 +261,7 @@ if __name__ == "__main__":
 
         # print the loss at regular intervals
         if i % 1000 == 0:
-            get_loss(m, 500)
+            get_loss(m, 200)
 
         # backward pass
         optimizer.zero_grad(set_to_none=True)
@@ -287,7 +274,7 @@ if __name__ == "__main__":
     print("Training completed...")
     get_loss(m, 500)
     print(
-        decode(
+        trained_tokenizer.decode(
             m.generate(
                 torch.zeros((1, 1), dtype=torch.long, device=device), max_tokens=300
             )[0].tolist()
